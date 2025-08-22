@@ -35,282 +35,471 @@ declare global {
 
 // Enhanced Contract ABI with new functionality
 const CONTRACT_ABI = [
-  {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "EscrowCancelled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "EscrowCompleted",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "partyA",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "partyB",
-        type: "address",
-      },
-    ],
-    name: "EscrowCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "depositor",
-        type: "address",
-      },
-    ],
-    name: "FundsDeposited",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "approver",
-        type: "address",
-      },
-    ],
-    name: "TransactionApproved",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "approveTransaction",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "cancelEscrow",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_partyB",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amountB",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_description",
-        type: "string",
-      },
-    ],
-    name: "createEscrow",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "depositFunds",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "escrows",
-    outputs: [
-      {
-        internalType: "address",
-        name: "partyA",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "partyB",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amountA",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountB",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "status",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "deadlines",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "description",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "getEscrowParties",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "getEscrowDescription",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address",
-      },
-    ],
-    name: "getUserEscrows",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "cancelEscrow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_partyB",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amountB",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			}
+		],
+		"name": "createEscrow",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "depositFunds",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "EscrowCancelled",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "EscrowCompleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "partyA",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "partyB",
+				"type": "address"
+			}
+		],
+		"name": "EscrowCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "depositor",
+				"type": "address"
+			}
+		],
+		"name": "FundsDeposited",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_fee",
+				"type": "uint256"
+			}
+		],
+		"name": "setServiceFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "unpause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdrawFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "escrows",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "partyA",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "partyB",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountA",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountB",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "status",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "depositDeadline",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getContractStats",
+		"outputs": [
+			{
+				"internalType": "uint256[4]",
+				"name": "stats",
+				"type": "uint256[4]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowAmounts",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowDescription",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowFlags",
+		"outputs": [
+			{
+				"internalType": "bool[4]",
+				"name": "flags",
+				"type": "bool[4]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowParties",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowTimes",
+		"outputs": [
+			{
+				"internalType": "uint256[2]",
+				"name": "times",
+				"type": "uint256[2]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "getUserEscrows",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextEscrowId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "paused",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "serviceFeePercent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userEscrows",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "manualCompleteEscrow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
 ]
 
-const DEFAULT_CONTRACT_ADDRESS = "0x9a015454c3D9568a55bE928266b0454Ca3287A36"
+const DEFAULT_CONTRACT_ADDRESS = "0xc9c9549F34AB22C2932393E5366f77C559e72B14"
+
+// Basic chain metadata to drive labels and UX
+const CHAIN_METADATA: Record<number, { name: string; nativeSymbol: string }> = {
+  1: { name: "Ethereum Mainnet", nativeSymbol: "ETH" },
+  5: { name: "Goerli", nativeSymbol: "ETH" },
+  11155111: { name: "Sepolia", nativeSymbol: "ETH" },
+  137: { name: "Polygon", nativeSymbol: "MATIC" },
+  80001: { name: "Polygon Mumbai", nativeSymbol: "MATIC" },
+  80002: { name: "Polygon Amoy", nativeSymbol: "MATIC" },
+}
 
 // Web3 provider and contract instance
 let provider: ethers.BrowserProvider | null = null
@@ -322,13 +511,13 @@ interface Escrow {
   partyB: string
   amountA: string
   amountB: string
-  status: number
+  status: number // 0: waiting for party B deposit, 1: party B deposited, 2: completed, 3: cancelled
   description: string
   deadline: number
   partyADeposited: boolean
   partyBDeposited: boolean
-  executionWindow: number
-  refundWindow: number
+  creationTime?: number
+  depositDeadline?: number
 }
 
 export default function SecureSwapApp() {
@@ -341,6 +530,8 @@ export default function SecureSwapApp() {
   const [error, setError] = useState("")
   const [executionTimers, setExecutionTimers] = useState<{[key: number]: NodeJS.Timeout}>({})
   const [refundTimers, setRefundTimers] = useState<{[key: number]: NodeJS.Timeout}>({})
+  const [networkName, setNetworkName] = useState("Unknown")
+  const [nativeSymbol, setNativeSymbol] = useState("ETH")
 
   // Form states
   const [createForm, setCreateForm] = useState({
@@ -354,6 +545,35 @@ export default function SecureSwapApp() {
   const [lookupLoading, setLookupLoading] = useState(false)
   const [lookupError, setLookupError] = useState("")
 
+  const initContract = async () => {
+    if (!provider) return
+    try {
+      const code = await provider.getCode(contractAddress)
+      if (!code || code === "0x") {
+        setError("No contract found at this address on the connected network. Update it in Settings.")
+        contract = null
+        return
+      }
+      contract = new ethers.Contract(contractAddress, CONTRACT_ABI, provider)
+      
+      // Verify the contract has the expected functions
+      try {
+        await contract.owner()
+        console.log("Contract verification successful - owner function accessible")
+      } catch (verifyError) {
+        console.error("Contract verification failed:", verifyError)
+        setError("Contract at this address doesn't match the expected interface")
+        contract = null
+        return
+      }
+      
+      setError("")
+    } catch (e: any) {
+      console.error("Failed to initialize contract:", e)
+      setError("Failed to initialize contract")
+    }
+  }
+
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
@@ -362,7 +582,28 @@ export default function SecureSwapApp() {
         setWalletConnected(true)
         // Initialize provider and contract
         provider = new ethers.BrowserProvider(window.ethereum)
-        contract = new ethers.Contract(contractAddress, CONTRACT_ABI, provider)
+        const net = await provider.getNetwork()
+        const chainId = Number(net.chainId)
+        const meta = CHAIN_METADATA[chainId]
+        setNetworkName(meta ? meta.name : `Chain ${chainId}`)
+        setNativeSymbol(meta ? meta.nativeSymbol : "ETH")
+        await initContract()
+
+        if (window.ethereum?.on) {
+          window.ethereum.on("accountsChanged", (accs: string[]) => {
+            if (accs && accs.length > 0) setWalletAddress(accs[0])
+          })
+          window.ethereum.on("chainChanged", async () => {
+            provider = new ethers.BrowserProvider(window.ethereum)
+            const n = await provider.getNetwork()
+            const id = Number(n.chainId)
+            const m = CHAIN_METADATA[id]
+            setNetworkName(m ? m.name : `Chain ${id}`)
+            setNativeSymbol(m ? m.nativeSymbol : "ETH")
+            await initContract()
+            await loadUserEscrows()
+          })
+        }
       } catch (error) {
         console.error("Failed to connect wallet:", error)
         setError("Failed to connect wallet")
@@ -371,6 +612,14 @@ export default function SecureSwapApp() {
       alert("Please install MetaMask to use this application")
     }
   }
+
+  // Re-init contract when address changes in Settings
+  useEffect(() => {
+    if (walletConnected && provider) {
+      initContract()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractAddress])
 
   const createEscrow = async () => {
     if (!walletConnected || !contract || !provider) {
@@ -400,7 +649,7 @@ export default function SecureSwapApp() {
 
     try {
       const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
+      const contractWithSigner = contract.connect(signer) as ethers.Contract
       const amountAWei = ethers.parseEther(createForm.amountA)
       const amountBWei = ethers.parseEther(createForm.amountB)
 
@@ -441,26 +690,41 @@ export default function SecureSwapApp() {
       const escrowDetails = []
 
       for (const escrowId of userEscrows) {
-        const escrow = await contract.escrows(escrowId)
         const [partyA, partyB] = await contract.getEscrowParties(escrowId)
         const description = await contract.getEscrowDescription(escrowId)
-        
-        // Enhanced escrow object with new timing features
+        const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
+        const flagsArr = await contract.getEscrowFlags(escrowId)
+        const timesArr = await contract.getEscrowTimes(escrowId)
+
+        const partyADeposited = Boolean(flagsArr[0])
+        const partyBDeposited = Boolean(flagsArr[1])
+        const completed = Boolean(flagsArr[2])
+        const cancelled = Boolean(flagsArr[3])
+
+        const creationTime = Number(timesArr[0]) * 1000
+        const depositDeadline = Number(timesArr[1]) * 1000
+
+        let derivedStatus = 0
+        if (completed) derivedStatus = 2
+        else if (cancelled) derivedStatus = 3
+        else if (partyADeposited && partyBDeposited) derivedStatus = 1
+        else derivedStatus = 0
+
         const escrowDetail: Escrow = {
           id: Number(escrowId),
           partyA,
           partyB,
-          amountA: ethers.formatEther(escrow.amountA),
-          amountB: ethers.formatEther(escrow.amountB),
-          status: Number(escrow.status),
+          amountA: ethers.formatEther(amountAWei),
+          amountB: ethers.formatEther(amountBWei),
+          status: derivedStatus,
           description,
-          deadline: Number(escrow.deadlines),
-          partyADeposited: true, // Party A deposits when creating
-          partyBDeposited: false,
-          executionWindow: 30000, // 30 seconds
-          refundWindow: 300000, // 5 minutes
+          deadline: depositDeadline,
+          partyADeposited,
+          partyBDeposited,
+          creationTime,
+          depositDeadline,
         }
-        
+
         escrowDetails.push(escrowDetail)
       }
 
@@ -477,112 +741,151 @@ export default function SecureSwapApp() {
     }
 
     try {
-      const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
+      // Debug: Get escrow details before attempting deposit
+      const [partyA, partyB] = await contract.getEscrowParties(escrowId)
+      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
+      const flagsArr = await contract.getEscrowFlags(escrowId)
+      const timesArr = await contract.getEscrowTimes(escrowId)
       
-      const escrow = await contract.escrows(escrowId)
-      const amountBWei = escrow.amountB
+      console.log("Debug - Escrow Details:")
+      console.log("Party A:", partyA)
+      console.log("Party B:", partyB)
+      console.log("Current wallet:", walletAddress)
+      console.log("Amount A (wei):", amountAWei.toString())
+      console.log("Amount B (wei):", amountBWei.toString())
+      console.log("Party B Deposited:", flagsArr[1])
+      console.log("Deposit Deadline:", new Date(Number(timesArr[1]) * 1000))
+      console.log("Current Time:", new Date())
+      
+      // Check if current wallet is Party B
+      if (walletAddress.toLowerCase() !== partyB.toLowerCase()) {
+        setError(`You are not Party B. Expected: ${partyB}, Current: ${walletAddress}`)
+        return
+      }
+      
+      // Check if already deposited
+      if (flagsArr[1]) {
+        setError("Party B has already deposited funds for this escrow.")
+        return
+      }
+      
+      // Check deadline
+      const depositDeadline = Number(timesArr[1]) * 1000
+      const currentTime = Date.now()
+      
+      if (currentTime > depositDeadline) {
+        setError(`Deposit deadline has passed. Deadline: ${new Date(depositDeadline)}, Current: ${new Date(currentTime)}`)
+        return
+      }
 
+      // Check if contract is paused
+      try {
+        const isPaused = await contract.paused()
+        console.log("Contract paused status:", isPaused)
+        if (isPaused) {
+          setError("Contract is currently paused. Deposits are not allowed.")
+          return
+        }
+      } catch (pauseError) {
+        console.error("Error checking pause status:", pauseError)
+      }
+
+      // Check if escrow is already completed
+      try {
+        const flagsArr = await contract.getEscrowFlags(escrowId)
+        const completed = Boolean(flagsArr[2])
+        const cancelled = Boolean(flagsArr[3])
+        
+        if (completed) {
+          setError("This escrow has already been completed.")
+          return
+        }
+        
+        if (cancelled) {
+          setError("This escrow has been cancelled.")
+          return
+        }
+      } catch (flagError) {
+        console.error("Error checking escrow flags:", flagError)
+      }
+
+      const signer = await provider.getSigner()
+      const contractWithSigner = contract.connect(signer) as ethers.Contract
+
+      console.log("Attempting deposit with amount:", amountBWei.toString(), "wei")
+      
+      // Try to estimate gas first to catch any issues
+      try {
+        const gasEstimate = await contractWithSigner.depositFunds.estimateGas(escrowId, { value: amountBWei })
+        console.log("Gas estimate successful:", gasEstimate.toString())
+      } catch (gasError: any) {
+        console.error("Gas estimation failed:", gasError)
+        if (gasError.message?.includes("execution reverted")) {
+          // Try to decode the revert reason
+          try {
+            const data = gasError.data || gasError.error?.data
+            if (data) {
+              console.log("Revert data:", data)
+              // You can add custom error decoding here if needed
+            }
+          } catch (decodeError) {
+            console.error("Failed to decode revert reason:", decodeError)
+          }
+        }
+        throw gasError
+      }
+      
       const tx = await contractWithSigner.depositFunds(escrowId, { value: amountBWei })
       const receipt = await tx.wait()
 
       if (receipt.status === 1) {
-        alert("Funds deposited successfully! Starting 30-second execution window...")
+        alert("Funds deposited successfully! Transaction will be automatically executed within 30 seconds.")
         
-        // Start execution timer
-        const executionTimer = setTimeout(() => {
-          executeTransaction(escrowId)
-        }, 30000) // 30 seconds
-        
-        setExecutionTimers(prev => ({ ...prev, [escrowId]: executionTimer }))
-        
-        // Start refund timer (5 minutes)
-        const refundTimer = setTimeout(() => {
-          refundToPartyA(escrowId)
-        }, 300000) // 5 minutes
-        
-        setRefundTimers(prev => ({ ...prev, [escrowId]: refundTimer }))
-        
+        // Update looked up escrow state immediately if present
+        setLookedUpEscrow(prev => prev && prev.id === escrowId 
+          ? { ...prev, status: 1, partyBDeposited: true } 
+          : prev)
+
         await loadUserEscrows()
       }
     } catch (error: any) {
       console.error("Error depositing funds:", error)
-      setError(error.message || "Failed to deposit funds")
-    }
-  }
-
-  const executeTransaction = async (escrowId: number) => {
-    if (!walletConnected || !contract || !provider) return
-
-    try {
-      const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
-
-      const tx = await contractWithSigner.approveTransaction(escrowId)
-      const receipt = await tx.wait()
-
-      if (receipt.status === 1) {
-        alert("Transaction executed successfully! Both parties have received their funds.")
-        
-        // Clear timers
-        clearTimeout(executionTimers[escrowId])
-        clearTimeout(refundTimers[escrowId])
-        
-        await loadUserEscrows()
+      
+      // Provide more specific error messages
+      if (error.message?.includes("Deadline passed")) {
+        setError("The deposit deadline has passed. This escrow can no longer be joined.")
+      } else if (error.message?.includes("Already deposited")) {
+        setError("Funds have already been deposited for this escrow.")
+      } else if (error.message?.includes("Wrong amount")) {
+        setError("The amount sent does not match the required deposit amount.")
+      } else if (error.message?.includes("Not party B")) {
+        setError("Only the invited Party B can deposit funds for this escrow.")
+      } else {
+        setError(error.message || "Failed to deposit funds")
       }
-    } catch (error: any) {
-      console.error("Error executing transaction:", error)
-      setError("Failed to execute transaction automatically")
     }
   }
 
-  const refundToPartyA = async (escrowId: number) => {
-    if (!walletConnected || !contract || !provider) return
 
+
+  const cancelEscrowOnChain = async (escrowId: number) => {
+    if (!walletConnected || !contract || !provider) return
     try {
       const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
-
+      const contractWithSigner = contract.connect(signer) as ethers.Contract
       const tx = await contractWithSigner.cancelEscrow(escrowId)
       const receipt = await tx.wait()
-
       if (receipt.status === 1) {
-        alert("Party B did not fulfill their part within 5 minutes. Funds refunded to Party A.")
-        
-        // Clear timers
-        clearTimeout(executionTimers[escrowId])
-        clearTimeout(refundTimers[escrowId])
-        
+        alert("Escrow cancellation submitted.")
         await loadUserEscrows()
       }
     } catch (error: any) {
-      console.error("Error refunding funds:", error)
-      setError("Failed to refund funds automatically")
+      console.error("Error cancelling escrow:", error)
+      setError(error.message || "Failed to cancel")
     }
   }
 
-  const approveTransaction = async (escrowId: number) => {
-    if (!walletConnected || !contract || !provider) {
-      setError("Please connect your wallet first")
-      return
-    }
 
-    try {
-      const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
-
-      const tx = await contractWithSigner.approveTransaction(escrowId)
-      const receipt = await tx.wait()
-
-      if (receipt.status === 1) {
-        alert("Transaction approved successfully!")
-        await loadUserEscrows()
-      }
-    } catch (error: any) {
-      console.error("Error approving transaction:", error)
-      setError(error.message || "Failed to approve transaction")
-    }
-  }
 
   const cancelEscrow = async (escrowId: number) => {
     if (!walletConnected || !contract || !provider) {
@@ -592,7 +895,7 @@ export default function SecureSwapApp() {
 
     try {
       const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer)
+      const contractWithSigner = contract.connect(signer) as ethers.Contract
 
       const tx = await contractWithSigner.cancelEscrow(escrowId)
       const receipt = await tx.wait()
@@ -633,9 +936,22 @@ export default function SecureSwapApp() {
 
     try {
       const escrowId = Number(joinEscrowId)
-      const escrow = await contract.escrows(escrowId)
       const [partyA, partyB] = await contract.getEscrowParties(escrowId)
       const description = await contract.getEscrowDescription(escrowId)
+      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
+      const flagsArr = await contract.getEscrowFlags(escrowId)
+      const timesArr = await contract.getEscrowTimes(escrowId)
+      const partyADeposited = Boolean(flagsArr[0])
+      const partyBDeposited = Boolean(flagsArr[1])
+      const completed = Boolean(flagsArr[2])
+      const cancelled = Boolean(flagsArr[3])
+      const creationTime = Number(timesArr[0]) * 1000
+      const depositDeadline = Number(timesArr[1]) * 1000
+      let statusNum = 0
+      if (completed) statusNum = 2
+      else if (cancelled) statusNum = 3
+      else if (partyADeposited && partyBDeposited) statusNum = 1
+      else statusNum = 0
       
       // Check if escrow exists and is valid
       if (!partyA || partyA === "0x0000000000000000000000000000000000000000") {
@@ -647,15 +963,15 @@ export default function SecureSwapApp() {
         id: escrowId,
         partyA,
         partyB,
-        amountA: ethers.formatEther(escrow.amountA),
-        amountB: ethers.formatEther(escrow.amountB),
-        status: Number(escrow.status),
+        amountA: ethers.formatEther(amountAWei),
+        amountB: ethers.formatEther(amountBWei),
+        status: statusNum,
         description,
-        deadline: Number(escrow.deadlines),
-        partyADeposited: true,
-        partyBDeposited: false,
-        executionWindow: 30000,
-        refundWindow: 300000,
+        deadline: depositDeadline,
+        partyADeposited,
+        partyBDeposited,
+        creationTime,
+        depositDeadline,
       }
 
       setLookedUpEscrow(escrowDetail)
@@ -680,6 +996,54 @@ export default function SecureSwapApp() {
     }
   }
 
+  const checkEscrowStatus = async (escrowId: number) => {
+    if (!contract) return
+    
+    try {
+      const [partyA, partyB] = await contract.getEscrowParties(escrowId)
+      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
+      const flagsArr = await contract.getEscrowFlags(escrowId)
+      const timesArr = await contract.getEscrowTimes(escrowId)
+      
+      // Check contract state
+      const isPaused = await contract.paused()
+      const owner = await contract.owner()
+      
+      console.log("=== ESCROW STATUS CHECK ===")
+      console.log("Escrow ID:", escrowId)
+      console.log("Party A:", partyA)
+      console.log("Party B:", partyB)
+      console.log("Current Wallet:", walletAddress)
+      console.log("Amount A:", ethers.formatEther(amountAWei), "ETH")
+      console.log("Amount B:", ethers.formatEther(amountBWei), "ETH")
+      console.log("Party A Deposited:", flagsArr[0])
+      console.log("Party B Deposited:", flagsArr[1])
+      console.log("Completed:", flagsArr[2])
+      console.log("Cancelled:", flagsArr[3])
+      console.log("Creation Time:", new Date(Number(timesArr[0]) * 1000))
+      console.log("Deposit Deadline:", new Date(Number(timesArr[1]) * 1000))
+      console.log("Current Time:", new Date())
+      console.log("Time until deposit deadline:", Math.floor((Number(timesArr[1]) * 1000 - Date.now()) / 1000), "seconds")
+      console.log("Contract Paused:", isPaused)
+      console.log("Contract Owner:", owner)
+      console.log("==========================")
+      
+      return {
+        partyA,
+        partyB,
+        amountA: ethers.formatEther(amountAWei),
+        amountB: ethers.formatEther(amountBWei),
+        flags: flagsArr,
+        times: timesArr,
+        isPaused,
+        owner
+      }
+    } catch (error) {
+      console.error("Error checking escrow status:", error)
+      return null
+    }
+  }
+
   const getStatusBadge = (status: number, escrow: Escrow) => {
     switch (status) {
       case 0:
@@ -690,18 +1054,10 @@ export default function SecureSwapApp() {
           </Badge>
         )
       case 1:
-        if (escrow.partyBDeposited) {
-          return (
-            <Badge variant="secondary" className="bg-green-500/20 text-green-300 border border-green-500/30">
-              <Timer className="w-3 h-3 mr-1" />
-              Execution Window (30s)
-            </Badge>
-          )
-        }
         return (
-          <Badge variant="secondary" className="bg-orange-500/20 text-orange-300 border border-orange-500/30">
-            <AlertCircle className="w-3 h-3 mr-1" />
-            Active
+          <Badge variant="secondary" className="bg-green-500/20 text-green-300 border border-green-500/30">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            Auto-Executing
           </Badge>
         )
       case 2:
@@ -723,6 +1079,19 @@ export default function SecureSwapApp() {
     }
   }
 
+  // Determine if the connected wallet can join (deposit) this escrow
+  const canJoinEscrow = (e: Escrow | null): boolean => {
+    if (!e || !walletConnected) return false
+    const isPartyB = e.partyB?.toLowerCase?.() === walletAddress.toLowerCase()
+    const notFinal = e.status !== 2 && e.status !== 3
+    const notExpired = !e.deadline || e.deadline > Date.now()
+    const depositNotExpired = !e.depositDeadline || e.depositDeadline > Date.now()
+    const notAlreadyDeposited = !e.partyBDeposited
+    return Boolean(isPartyB && notFinal && notExpired && depositNotExpired && notAlreadyDeposited)
+  }
+
+
+
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
@@ -739,8 +1108,6 @@ export default function SecureSwapApp() {
       deadline: Date.now() + 86400000,
       partyADeposited: true,
       partyBDeposited: true,
-      executionWindow: 30000,
-      refundWindow: 300000,
     },
     {
       id: 2,
@@ -753,8 +1120,6 @@ export default function SecureSwapApp() {
       deadline: Date.now() - 3600000,
       partyADeposited: true,
       partyBDeposited: true,
-      executionWindow: 30000,
-      refundWindow: 300000,
     },
   ]
 
@@ -870,8 +1235,8 @@ export default function SecureSwapApp() {
         <Alert className="bg-blue-500/10 border-blue-500/30 text-blue-300 mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <strong>Enhanced Features:</strong> 30-second execution window when both parties deposit, 
-            5-minute refund window if Party B doesn't fulfill their part. Automatic transaction execution and refunds.
+            <strong>Automatic Execution:</strong> When Party B deposits funds within 5 minutes, 
+            the transaction is automatically executed within 30 seconds. No manual approval required!
           </AlertDescription>
         </Alert>
 
@@ -917,7 +1282,7 @@ export default function SecureSwapApp() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="amountA" className="text-slate-300">Your Amount (ETH)</Label>
+                    <Label htmlFor="amountA" className="text-slate-300">Your Amount ({nativeSymbol})</Label>
                     <Input
                       id="amountA"
                       type="number"
@@ -931,7 +1296,7 @@ export default function SecureSwapApp() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="amountB" className="text-slate-300">Expected Amount from Counterparty (ETH)</Label>
+                  <Label htmlFor="amountB" className="text-slate-300">Expected Amount from Counterparty ({nativeSymbol})</Label>
                   <Input
                     id="amountB"
                     type="number"
@@ -962,11 +1327,11 @@ export default function SecureSwapApp() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-slate-300">Your deposit:</span>
-                      <span className="font-medium ml-2 text-white">{createForm.amountA || "0"} ETH</span>
+                      <span className="font-medium ml-2 text-white">{createForm.amountA || "0"} {nativeSymbol}</span>
                     </div>
                     <div>
                       <span className="text-slate-300">Expected:</span>
-                      <span className="font-medium ml-2 text-white">{createForm.amountB || "0"} ETH</span>
+                      <span className="font-medium ml-2 text-white">{createForm.amountB || "0"} {nativeSymbol}</span>
                     </div>
                     <div>
                       <span className="text-slate-300">Service fee:</span>
@@ -1031,7 +1396,7 @@ export default function SecureSwapApp() {
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-slate-300">Value</p>
-                          <p className="font-semibold text-orange-400">{escrow.amountA} ETH</p>
+                          <p className="font-semibold text-orange-400">{escrow.amountA} {nativeSymbol}</p>
                         </div>
                       </div>
 
@@ -1039,14 +1404,26 @@ export default function SecureSwapApp() {
                         <div>
                           <p className="text-xs text-slate-500 uppercase tracking-wide">Party A</p>
                           <p className="font-mono text-sm text-white">{formatAddress(escrow.partyA)}</p>
+                          {escrow.partyADeposited && (
+                            <div className="flex items-center space-x-1 mt-1">
+                              <CheckCircle className="w-3 h-3 text-green-400" />
+                              <span className="text-xs text-green-400">Deposited</span>
+                            </div>
+                          )}
                         </div>
                         <div>
                           <p className="text-xs text-slate-500 uppercase tracking-wide">Party B</p>
                           <p className="font-mono text-sm text-white">{formatAddress(escrow.partyB)}</p>
+                          {escrow.partyBDeposited && (
+                            <div className="flex items-center space-x-1 mt-1">
+                              <CheckCircle className="w-3 h-3 text-green-400" />
+                              <span className="text-xs text-green-400">Deposited</span>
+                            </div>
+                          )}
                         </div>
                         <div>
                           <p className="text-xs text-slate-500 uppercase tracking-wide">Expected</p>
-                          <p className="font-semibold text-sm text-white">{escrow.amountB} ETH</p>
+                          <p className="font-semibold text-sm text-white">{escrow.amountB} {nativeSymbol}</p>
                         </div>
                       </div>
 
@@ -1056,26 +1433,20 @@ export default function SecureSwapApp() {
                           <span>
                             {escrow.status === 2
                               ? "Completed"
-                              : escrow.deadline > Date.now() && escrow.deadline < Date.now() + (365 * 24 * 60 * 60 * 1000) // Check if deadline is reasonable (within 1 year)
-                                ? `${Math.ceil((escrow.deadline - Date.now()) / (1000 * 60 * 60 * 24))} days left`
-                                : escrow.deadline > Date.now()
-                                  ? "Valid"
-                                  : "Expired"}
+                              : escrow.partyADeposited && escrow.partyBDeposited
+                                ? "Auto-executing (30s)"
+                                : escrow.deadline > Date.now() && escrow.deadline < Date.now() + (365 * 24 * 60 * 60 * 1000)
+                                  ? `${Math.ceil((escrow.deadline - Date.now()) / (1000 * 60 * 60 * 24))} days left`
+                                  : escrow.deadline > Date.now()
+                                    ? "Valid"
+                                    : "Expired"}
                           </span>
                         </div>
                         <div className="flex space-x-2">
-                          {escrow.status === 1 && escrow.partyBDeposited && (
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="border-slate-700 text-slate-300 hover:bg-slate-800"
-                              onClick={() => approveTransaction(escrow.id)}
-                            >
-                              <Timer className="w-3 h-3 mr-1" />
-                              Execute Now
-                            </Button>
-                          )}
-                          {escrow.status === 0 && (
+
+                          
+                          {/* Show Deposit Funds button for Party B when not deposited yet */}
+                          {escrow.status === 0 && escrow.partyB?.toLowerCase() === walletAddress.toLowerCase() && !escrow.partyBDeposited && (
                             <Button 
                               variant="outline" 
                               size="sm" 
@@ -1086,12 +1457,14 @@ export default function SecureSwapApp() {
                               Deposit Funds
                             </Button>
                           )}
-                          {escrow.status === 1 && (
+                          
+                          {/* Show Cancel button */}
+                          {escrow.status !== 2 && escrow.status !== 3 && (
                             <Button
                               variant="outline"
                               size="sm"
                               className="text-red-400 hover:text-red-300 bg-transparent border-slate-700"
-                              onClick={() => cancelEscrow(escrow.id)}
+                              onClick={() => cancelEscrowOnChain(escrow.id)}
                             >
                               Cancel
                             </Button>
@@ -1172,11 +1545,11 @@ export default function SecureSwapApp() {
                             </div>
                             <div>
                               <p className="text-slate-500">Amount A:</p>
-                              <p className="font-semibold text-white">{lookedUpEscrow.amountA} ETH</p>
+                              <p className="font-semibold text-white">{lookedUpEscrow.amountA} {nativeSymbol}</p>
                             </div>
                             <div>
                               <p className="text-slate-500">Amount B (Your deposit):</p>
-                              <p className="font-semibold text-orange-400">{lookedUpEscrow.amountB} ETH</p>
+                              <p className="font-semibold text-orange-400">{lookedUpEscrow.amountB} {nativeSymbol}</p>
                             </div>
                           </div>
 
@@ -1185,32 +1558,46 @@ export default function SecureSwapApp() {
                             <span>
                               {lookedUpEscrow.status === 2
                                 ? "Completed"
-                                : lookedUpEscrow.deadline > Date.now() && lookedUpEscrow.deadline < Date.now() + (365 * 24 * 60 * 60 * 1000)
-                                  ? `${Math.ceil((lookedUpEscrow.deadline - Date.now()) / (1000 * 60 * 60 * 24))} days left`
-                                  : lookedUpEscrow.deadline > Date.now()
-                                    ? "Valid"
-                                    : "Expired"}
+                                : lookedUpEscrow.depositDeadline && lookedUpEscrow.depositDeadline > Date.now()
+                                  ? `Deposit deadline: ${Math.ceil((lookedUpEscrow.depositDeadline - Date.now()) / (1000 * 60 * 60))} hours left`
+                                  : lookedUpEscrow.depositDeadline && lookedUpEscrow.depositDeadline <= Date.now()
+                                    ? "Deposit deadline expired"
+                                    : lookedUpEscrow.deadline > Date.now() && lookedUpEscrow.deadline < Date.now() + (365 * 24 * 60 * 60 * 1000)
+                                      ? `${Math.ceil((lookedUpEscrow.deadline - Date.now()) / (1000 * 60 * 60 * 24))} days left`
+                                      : lookedUpEscrow.deadline > Date.now()
+                                        ? "Valid"
+                                        : "Expired"}
                             </span>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
 
-                    <Button 
-                      className="w-full bg-green-500 hover:bg-green-600" 
-                      onClick={joinEscrow}
-                      disabled={lookedUpEscrow.status !== 0}
-                    >
-                      {lookedUpEscrow.status === 0 
-                        ? "Join Escrow & Deposit Funds" 
-                        : lookedUpEscrow.status === 1 
-                          ? "Escrow Already Active (Both Parties Deposited)"
-                          : lookedUpEscrow.status === 2 
+                    <div className="space-y-2">
+                      <Button 
+                        className="w-full bg-green-500 hover:bg-green-600" 
+                        onClick={joinEscrow}
+                        disabled={!canJoinEscrow(lookedUpEscrow)}
+                      >
+                        {canJoinEscrow(lookedUpEscrow)
+                          ? "Join Escrow & Deposit Funds"
+                          : lookedUpEscrow?.status === 2
                             ? "Escrow Completed"
-                            : lookedUpEscrow.status === 3 
+                            : lookedUpEscrow?.status === 3
                               ? "Escrow Cancelled"
-                              : "Escrow Expired"}
-                    </Button>
+                              : lookedUpEscrow && lookedUpEscrow.deadline <= Date.now()
+                                ? "Escrow Expired"
+                                : "Not Eligible (Switch to invited wallet)"}
+                      </Button>
+                      
+                      <Button 
+                        variant="outline"
+                        className="w-full border-slate-700 text-slate-300 hover:bg-slate-800" 
+                        onClick={() => checkEscrowStatus(lookedUpEscrow.id)}
+                      >
+                        Debug: Check Escrow Status
+                      </Button>
+                    </div>
                   </div>
                 )}
 
@@ -1256,7 +1643,7 @@ export default function SecureSwapApp() {
                   <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
                       <span className="text-slate-300">Network:</span>
-                      <span className="font-medium text-white">Ethereum Mainnet</span>
+                      <span className="font-medium text-white">{networkName}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-300">Service Fee:</span>
@@ -1279,7 +1666,151 @@ export default function SecureSwapApp() {
                   </div>
                 </div>
 
-                <Button className="w-full bg-orange-500 hover:bg-orange-600">Test Connection</Button>
+                <div className="space-y-2">
+                  <Button 
+                    className="w-full bg-orange-500 hover:bg-orange-600"
+                    onClick={async () => {
+                      if (!contract) {
+                        alert("Contract not initialized")
+                        return
+                      }
+                      try {
+                        const owner = await contract.owner()
+                        const paused = await contract.paused()
+                        const nextId = await contract.nextEscrowId()
+                        alert(`Contract Test Results:\nOwner: ${owner}\nPaused: ${paused}\nNext Escrow ID: ${nextId}`)
+                      } catch (error) {
+                        alert(`Contract test failed: ${error}`)
+                      }
+                    }}
+                  >
+                    Test Connection
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="w-full border-slate-700 text-slate-300 hover:bg-slate-800"
+                    onClick={async () => {
+                      if (!contract) {
+                        alert("Contract not initialized")
+                        return
+                      }
+                      try {
+                        // Check escrow #1 status
+                        const flagsArr = await contract.getEscrowFlags(1)
+                        const timesArr = await contract.getEscrowTimes(1)
+                        const [partyA, partyB] = await contract.getEscrowParties(1)
+                        const [amountA, amountB] = await contract.getEscrowAmounts(1)
+                        
+                        const status = {
+                          partyADeposited: flagsArr[0],
+                          partyBDeposited: flagsArr[1],
+                          completed: flagsArr[2],
+                          cancelled: flagsArr[3],
+                          creationTime: new Date(Number(timesArr[0]) * 1000),
+                          depositDeadline: new Date(Number(timesArr[1]) * 1000),
+                          partyA: partyA,
+                          partyB: partyB,
+                          amountA: ethers.formatEther(amountA),
+                          amountB: ethers.formatEther(amountB)
+                        }
+                        
+                        console.log("Escrow #1 Status:", status)
+                        alert(`Escrow #1 Status:\nParty A Deposited: ${status.partyADeposited}\nParty B Deposited: ${status.partyBDeposited}\nCompleted: ${status.completed}\nCancelled: ${status.cancelled}\nCreation: ${status.creationTime}\nDeadline: ${status.depositDeadline}`)
+                      } catch (error) {
+                        alert(`Error checking escrow: ${error}`)
+                      }
+                    }}
+                  >
+                    Check Escrow #1 Status
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="w-full border-slate-700 text-slate-300 hover:bg-slate-800"
+                    onClick={async () => {
+                      if (!contract) {
+                        alert("Contract not initialized")
+                        return
+                      }
+                      try {
+                        // Try to manually complete escrow #1 if both parties have deposited
+                        const flagsArr = await contract.getEscrowFlags(1)
+                        if (flagsArr[0] && flagsArr[1] && !flagsArr[2] && !flagsArr[3]) {
+                          if (!provider) {
+                            alert("Provider not available")
+                            return
+                          }
+                          const signer = await provider.getSigner()
+                          const contractWithSigner = contract.connect(signer) as ethers.Contract
+                          
+                          // Call the manual completion function
+                          alert("Attempting to manually complete escrow...")
+                          const tx = await contractWithSigner.manualCompleteEscrow(1)
+                          const receipt = await tx.wait()
+                          
+                          if (receipt.status === 1) {
+                            alert("Escrow manually completed successfully!")
+                          } else {
+                            alert("Manual completion failed")
+                          }
+                        } else {
+                          alert("Escrow cannot be completed manually. Check the status first.")
+                        }
+                      } catch (error) {
+                        alert(`Error: ${error}`)
+                      }
+                    }}
+                  >
+                    Manual Complete Escrow #1
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="w-full border-slate-700 text-slate-300 hover:bg-slate-800"
+                    onClick={async () => {
+                      if (!contract) {
+                        alert("Contract not initialized")
+                        return
+                      }
+                      try {
+                        // Check contract balance and escrow status
+                        if (!provider) {
+                          alert("Provider not available")
+                          return
+                        }
+                        const balance = await provider.getBalance(contractAddress)
+                        const flagsArr = await contract.getEscrowFlags(1)
+                        const [amountA, amountB] = await contract.getEscrowAmounts(1)
+                        
+                        const totalDeposited = amountA + amountB
+                        const currentBalance = balance
+                        
+                        console.log("Contract Analysis:")
+                        console.log("Current Balance:", ethers.formatEther(currentBalance), "ETH")
+                        console.log("Total Deposited:", ethers.formatEther(totalDeposited), "ETH")
+                        console.log("Party A Deposited:", flagsArr[0])
+                        console.log("Party B Deposited:", flagsArr[1])
+                        console.log("Completed:", flagsArr[2])
+                        console.log("Cancelled:", flagsArr[3])
+                        
+                        if (flagsArr[0] && flagsArr[1] && !flagsArr[2] && !flagsArr[3]) {
+                          if (currentBalance < totalDeposited) {
+                            alert(`Funds may have been transferred!\nCurrent Balance: ${ethers.formatEther(currentBalance)} ETH\nTotal Deposited: ${ethers.formatEther(totalDeposited)} ETH\nDifference: ${ethers.formatEther(totalDeposited - currentBalance)} ETH`)
+                          } else {
+                            alert(`Funds still in contract.\nCurrent Balance: ${ethers.formatEther(currentBalance)} ETH\nTotal Deposited: ${ethers.formatEther(totalDeposited)} ETH`)
+                          }
+                        } else {
+                          alert(`Escrow Status:\nParty A Deposited: ${flagsArr[0]}\nParty B Deposited: ${flagsArr[1]}\nCompleted: ${flagsArr[2]}\nCancelled: ${flagsArr[3]}`)
+                        }
+                      } catch (error) {
+                        alert(`Error: ${error}`)
+                      }
+                    }}
+                  >
+                    Check Contract Balance
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
