@@ -67,13 +67,7 @@ const CONTRACT_ABI = [
 			}
 		],
 		"name": "createEscrow",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
 	},
@@ -91,9 +85,44 @@ const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "manualCompleteEscrow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
 	},
 	{
 		"anonymous": false,
@@ -101,7 +130,7 @@ const CONTRACT_ABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "escrowId",
 				"type": "uint256"
 			}
 		],
@@ -114,7 +143,7 @@ const CONTRACT_ABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "escrowId",
 				"type": "uint256"
 			}
 		],
@@ -127,7 +156,7 @@ const CONTRACT_ABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "escrowId",
 				"type": "uint256"
 			},
 			{
@@ -152,7 +181,7 @@ const CONTRACT_ABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "escrowId",
 				"type": "uint256"
 			},
 			{
@@ -166,8 +195,47 @@ const CONTRACT_ABI = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "Paused",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -176,7 +244,7 @@ const CONTRACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_fee",
+				"name": "_feePercent",
 				"type": "uint256"
 			}
 		],
@@ -189,7 +257,7 @@ const CONTRACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_newOwner",
+				"name": "newOwner",
 				"type": "address"
 			}
 		],
@@ -204,6 +272,19 @@ const CONTRACT_ABI = [
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "Unpaused",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -253,22 +334,14 @@ const CONTRACT_ABI = [
 				"type": "uint256"
 			},
 			{
+				"internalType": "uint256",
+				"name": "creationTime",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string",
 				"name": "description",
 				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getContractStats",
-		"outputs": [
-			{
-				"internalType": "uint256[4]",
-				"name": "stats",
-				"type": "uint256[4]"
 			}
 		],
 		"stateMutability": "view",
@@ -473,23 +546,10 @@ const CONTRACT_ABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "manualCompleteEscrow",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
 ]
 
-const DEFAULT_CONTRACT_ADDRESS = "0xc9c9549F34AB22C2932393E5366f77C559e72B14"
+const DEFAULT_CONTRACT_ADDRESS = "0x3b9e61A9B9bD6dD17164353EC43A44aF47Fc62aD"
 
 // Basic chain metadata to drive labels and UX
 const CHAIN_METADATA: Record<number, { name: string; nativeSymbol: string }> = {
@@ -736,137 +796,130 @@ export default function SecureSwapApp() {
 
   const depositFunds = async (escrowId: number) => {
     if (!walletConnected || !contract || !provider) {
-      setError("Please connect your wallet first")
-      return
+      setError("Please connect your wallet first");
+      return;
     }
 
     try {
-      // Debug: Get escrow details before attempting deposit
-      const [partyA, partyB] = await contract.getEscrowParties(escrowId)
-      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
-      const flagsArr = await contract.getEscrowFlags(escrowId)
-      const timesArr = await contract.getEscrowTimes(escrowId)
+      // First, get comprehensive escrow status
+      const escrowStatus = await checkEscrowStatus(escrowId);
       
-      console.log("Debug - Escrow Details:")
-      console.log("Party A:", partyA)
-      console.log("Party B:", partyB)
-      console.log("Current wallet:", walletAddress)
-      console.log("Amount A (wei):", amountAWei.toString())
-      console.log("Amount B (wei):", amountBWei.toString())
-      console.log("Party B Deposited:", flagsArr[1])
-      console.log("Deposit Deadline:", new Date(Number(timesArr[1]) * 1000))
-      console.log("Current Time:", new Date())
+      if (!escrowStatus) {
+        setError("Failed to retrieve escrow information. Please check the escrow ID.");
+        return;
+      }
       
-      // Check if current wallet is Party B
-      if (walletAddress.toLowerCase() !== partyB.toLowerCase()) {
-        setError(`You are not Party B. Expected: ${partyB}, Current: ${walletAddress}`)
-        return
+      // Validate current user is Party B
+      if (!escrowStatus.isPartyB) {
+        setError(`You are not Party B for this escrow. Expected: ${escrowStatus.partyB}, Current: ${walletAddress}`);
+        return;
       }
       
       // Check if already deposited
-      if (flagsArr[1]) {
-        setError("Party B has already deposited funds for this escrow.")
-        return
+      if (escrowStatus.partyBDeposited) {
+        setError("Party B has already deposited funds for this escrow.");
+        return;
+      }
+      
+      // Check if escrow is completed or cancelled
+      if (escrowStatus.completed) {
+        setError("This escrow has already been completed.");
+        return;
+      }
+      
+      if (escrowStatus.cancelled) {
+        setError("This escrow has been cancelled.");
+        return;
       }
       
       // Check deadline
-      const depositDeadline = Number(timesArr[1]) * 1000
-      const currentTime = Date.now()
-      
-      if (currentTime > depositDeadline) {
-        setError(`Deposit deadline has passed. Deadline: ${new Date(depositDeadline)}, Current: ${new Date(currentTime)}`)
-        return
+      if (escrowStatus.timeUntilDeadline <= 0) {
+        setError(`Deposit deadline has passed. Deadline: ${escrowStatus.depositDeadline}`);
+        return;
       }
-
+      
       // Check if contract is paused
-      try {
-        const isPaused = await contract.paused()
-        console.log("Contract paused status:", isPaused)
-        if (isPaused) {
-          setError("Contract is currently paused. Deposits are not allowed.")
-          return
-        }
-      } catch (pauseError) {
-        console.error("Error checking pause status:", pauseError)
+      if (escrowStatus.isPaused) {
+        setError("Contract is currently paused. Deposits are not allowed.");
+        return;
       }
-
-      // Check if escrow is already completed
-      try {
-        const flagsArr = await contract.getEscrowFlags(escrowId)
-        const completed = Boolean(flagsArr[2])
-        const cancelled = Boolean(flagsArr[3])
-        
-        if (completed) {
-          setError("This escrow has already been completed.")
-          return
-        }
-        
-        if (cancelled) {
-          setError("This escrow has been cancelled.")
-          return
-        }
-      } catch (flagError) {
-        console.error("Error checking escrow flags:", flagError)
-      }
-
-      const signer = await provider.getSigner()
-      const contractWithSigner = contract.connect(signer) as ethers.Contract
-
-      console.log("Attempting deposit with amount:", amountBWei.toString(), "wei")
       
-      // Try to estimate gas first to catch any issues
+      const amountBWei = ethers.parseEther(escrowStatus.amountB);
+      
+      console.log("✓ All validations passed. Proceeding with deposit...");
+      console.log("Amount to deposit (wei):", amountBWei.toString());
+      
+      const signer = await provider.getSigner();
+      const contractWithSigner = contract.connect(signer) as ethers.Contract;
+      
+      // Try to estimate gas first
       try {
-        const gasEstimate = await contractWithSigner.depositFunds.estimateGas(escrowId, { value: amountBWei })
-        console.log("Gas estimate successful:", gasEstimate.toString())
+        const gasEstimate = await contractWithSigner.depositFunds.estimateGas(escrowId, { value: amountBWei });
+        console.log("✓ Gas estimate successful:", gasEstimate.toString());
       } catch (gasError: any) {
-        console.error("Gas estimation failed:", gasError)
+        console.error("✗ Gas estimation failed:", gasError);
+        
+        // Try to provide more specific error messages
         if (gasError.message?.includes("execution reverted")) {
-          // Try to decode the revert reason
-          try {
-            const data = gasError.data || gasError.error?.data
-            if (data) {
-              console.log("Revert data:", data)
-              // You can add custom error decoding here if needed
-            }
-          } catch (decodeError) {
-            console.error("Failed to decode revert reason:", decodeError)
+          const errorMessage = gasError.reason || gasError.message;
+          if (errorMessage.includes("Not party B")) {
+            setError("Only the invited Party B can deposit funds for this escrow.");
+          } else if (errorMessage.includes("Already deposited")) {
+            setError("Funds have already been deposited for this escrow.");
+          } else if (errorMessage.includes("Wrong amount")) {
+            setError("The amount sent does not match the required deposit amount.");
+          } else if (errorMessage.includes("Deadline passed")) {
+            setError("The deposit deadline has passed.");
+          } else {
+            setError(`Transaction will fail: ${errorMessage}`);
           }
+        } else {
+          setError("Transaction estimation failed. Please check your inputs and try again.");
         }
-        throw gasError
+        return;
       }
       
-      const tx = await contractWithSigner.depositFunds(escrowId, { value: amountBWei })
-      const receipt = await tx.wait()
-
+      // Execute the transaction
+      const tx = await contractWithSigner.depositFunds(escrowId, { value: amountBWei });
+      console.log("✓ Transaction sent:", tx.hash);
+      
+      const receipt = await tx.wait();
+      
       if (receipt.status === 1) {
-        alert("Funds deposited successfully! Transaction will be automatically executed within 30 seconds.")
+        console.log("✓ Transaction successful!");
+        alert("Funds deposited successfully! Transaction will be automatically executed within 30 seconds.");
         
-        // Update looked up escrow state immediately if present
+        // Update state immediately if present
         setLookedUpEscrow(prev => prev && prev.id === escrowId 
           ? { ...prev, status: 1, partyBDeposited: true } 
-          : prev)
+          : prev);
 
-        await loadUserEscrows()
-      }
-    } catch (error: any) {
-      console.error("Error depositing funds:", error)
-      
-      // Provide more specific error messages
-      if (error.message?.includes("Deadline passed")) {
-        setError("The deposit deadline has passed. This escrow can no longer be joined.")
-      } else if (error.message?.includes("Already deposited")) {
-        setError("Funds have already been deposited for this escrow.")
-      } else if (error.message?.includes("Wrong amount")) {
-        setError("The amount sent does not match the required deposit amount.")
-      } else if (error.message?.includes("Not party B")) {
-        setError("Only the invited Party B can deposit funds for this escrow.")
+        await loadUserEscrows();
       } else {
-        setError(error.message || "Failed to deposit funds")
+        throw new Error("Transaction failed");
+      }
+      
+    } catch (error: any) {
+      console.error("❌ Error depositing funds:", error);
+      
+      // Provide user-friendly error messages
+      if (error.message?.includes("user rejected")) {
+        setError("Transaction was cancelled by user.");
+      } else if (error.message?.includes("insufficient funds")) {
+        setError("Insufficient funds to complete the transaction.");
+      } else if (error.message?.includes("Deadline passed")) {
+        setError("The deposit deadline has passed. This escrow can no longer be joined.");
+      } else if (error.message?.includes("Already deposited")) {
+        setError("Funds have already been deposited for this escrow.");
+      } else if (error.message?.includes("Wrong amount")) {
+        setError("The amount sent does not match the required deposit amount.");
+      } else if (error.message?.includes("Not party B")) {
+        setError("Only the invited Party B can deposit funds for this escrow.");
+      } else {
+        setError(error.message || "Failed to deposit funds. Please try again.");
       }
     }
-  }
-
-
+  };
 
   const cancelEscrowOnChain = async (escrowId: number) => {
     if (!walletConnected || !contract || !provider) return
@@ -921,67 +974,68 @@ export default function SecureSwapApp() {
 
   const lookupEscrow = async () => {
     if (!walletConnected || !contract) {
-      setLookupError("Please connect your wallet first")
-      return
+      setLookupError("Please connect your wallet first");
+      return;
     }
 
     if (!joinEscrowId || isNaN(Number(joinEscrowId))) {
-      setLookupError("Please enter a valid escrow ID")
-      return
+      setLookupError("Please enter a valid escrow ID");
+      return;
     }
 
-    setLookupLoading(true)
-    setLookupError("")
-    setLookedUpEscrow(null)
+    setLookupLoading(true);
+    setLookupError("");
+    setLookedUpEscrow(null);
 
     try {
-      const escrowId = Number(joinEscrowId)
-      const [partyA, partyB] = await contract.getEscrowParties(escrowId)
-      const description = await contract.getEscrowDescription(escrowId)
-      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
-      const flagsArr = await contract.getEscrowFlags(escrowId)
-      const timesArr = await contract.getEscrowTimes(escrowId)
-      const partyADeposited = Boolean(flagsArr[0])
-      const partyBDeposited = Boolean(flagsArr[1])
-      const completed = Boolean(flagsArr[2])
-      const cancelled = Boolean(flagsArr[3])
-      const creationTime = Number(timesArr[0]) * 1000
-      const depositDeadline = Number(timesArr[1]) * 1000
-      let statusNum = 0
-      if (completed) statusNum = 2
-      else if (cancelled) statusNum = 3
-      else if (partyADeposited && partyBDeposited) statusNum = 1
-      else statusNum = 0
+      const escrowId = Number(joinEscrowId);
+      const escrowStatus = await checkEscrowStatus(escrowId);
       
-      // Check if escrow exists and is valid
-      if (!partyA || partyA === "0x0000000000000000000000000000000000000000") {
-        setLookupError("Escrow not found")
-        return
+      if (!escrowStatus) {
+        setLookupError("Failed to lookup escrow. Please check the ID and try again.");
+        return;
       }
-
+      
+      // Get description separately
+      let description = "";
+      try {
+        description = await contract.getEscrowDescription(escrowId);
+      } catch (error) {
+        console.warn("Could not get escrow description:", error);
+        description = "Description unavailable";
+      }
+      
+      // Determine status number
+      let statusNum = 0;
+      if (escrowStatus.completed) statusNum = 2;
+      else if (escrowStatus.cancelled) statusNum = 3;
+      else if (escrowStatus.partyADeposited && escrowStatus.partyBDeposited) statusNum = 1;
+      else statusNum = 0;
+      
       const escrowDetail: Escrow = {
         id: escrowId,
-        partyA,
-        partyB,
-        amountA: ethers.formatEther(amountAWei),
-        amountB: ethers.formatEther(amountBWei),
+        partyA: escrowStatus.partyA,
+        partyB: escrowStatus.partyB,
+        amountA: escrowStatus.amountA,
+        amountB: escrowStatus.amountB,
         status: statusNum,
         description,
-        deadline: depositDeadline,
-        partyADeposited,
-        partyBDeposited,
-        creationTime,
-        depositDeadline,
-      }
+        deadline: escrowStatus.depositDeadline.getTime(),
+        partyADeposited: escrowStatus.partyADeposited,
+        partyBDeposited: escrowStatus.partyBDeposited,
+        creationTime: escrowStatus.creationTime.getTime(),
+        depositDeadline: escrowStatus.depositDeadline.getTime(),
+      };
 
-      setLookedUpEscrow(escrowDetail)
+      setLookedUpEscrow(escrowDetail);
+      
     } catch (error: any) {
-      console.error("Error looking up escrow:", error)
-      setLookupError("Failed to lookup escrow. Please check the ID and try again.")
+      console.error("Error looking up escrow:", error);
+      setLookupError("Failed to lookup escrow. Please check the ID and try again.");
     } finally {
-      setLookupLoading(false)
+      setLookupLoading(false);
     }
-  }
+  };
 
   const joinEscrow = async () => {
     if (!lookedUpEscrow) return
@@ -997,52 +1051,116 @@ export default function SecureSwapApp() {
   }
 
   const checkEscrowStatus = async (escrowId: number) => {
-    if (!contract) return
+    if (!contract) return null;
     
     try {
-      const [partyA, partyB] = await contract.getEscrowParties(escrowId)
-      const [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId)
-      const flagsArr = await contract.getEscrowFlags(escrowId)
-      const timesArr = await contract.getEscrowTimes(escrowId)
+      console.log(`=== CHECKING ESCROW ${escrowId} STATUS ===`);
       
-      // Check contract state
-      const isPaused = await contract.paused()
-      const owner = await contract.owner()
+      // First, check if the escrow exists by trying to get basic info
+      let partyA, partyB, amountAWei, amountBWei, flagsArr, timesArr;
       
-      console.log("=== ESCROW STATUS CHECK ===")
-      console.log("Escrow ID:", escrowId)
-      console.log("Party A:", partyA)
-      console.log("Party B:", partyB)
-      console.log("Current Wallet:", walletAddress)
-      console.log("Amount A:", ethers.formatEther(amountAWei), "ETH")
-      console.log("Amount B:", ethers.formatEther(amountBWei), "ETH")
-      console.log("Party A Deposited:", flagsArr[0])
-      console.log("Party B Deposited:", flagsArr[1])
-      console.log("Completed:", flagsArr[2])
-      console.log("Cancelled:", flagsArr[3])
-      console.log("Creation Time:", new Date(Number(timesArr[0]) * 1000))
-      console.log("Deposit Deadline:", new Date(Number(timesArr[1]) * 1000))
-      console.log("Current Time:", new Date())
-      console.log("Time until deposit deadline:", Math.floor((Number(timesArr[1]) * 1000 - Date.now()) / 1000), "seconds")
-      console.log("Contract Paused:", isPaused)
-      console.log("Contract Owner:", owner)
-      console.log("==========================")
+      try {
+        [partyA, partyB] = await contract.getEscrowParties(escrowId);
+        console.log("✓ Successfully got parties:", { partyA, partyB });
+      } catch (error) {
+        console.error("✗ Failed to get escrow parties:", error);
+        throw new Error(`Escrow ${escrowId} does not exist or is invalid`);
+      }
       
-      return {
+      // Check if escrow exists (party A should not be zero address)
+      if (!partyA || partyA === "0x0000000000000000000000000000000000000000") {
+        throw new Error(`Escrow ${escrowId} not found`);
+      }
+      
+      try {
+        [amountAWei, amountBWei] = await contract.getEscrowAmounts(escrowId);
+        console.log("✓ Successfully got amounts:", { 
+          amountA: ethers.formatEther(amountAWei), 
+          amountB: ethers.formatEther(amountBWei) 
+        });
+      } catch (error) {
+        console.error("✗ Failed to get escrow amounts:", error);
+        throw new Error("Failed to retrieve escrow amounts");
+      }
+      
+      try {
+        flagsArr = await contract.getEscrowFlags(escrowId);
+        console.log("✓ Successfully got flags:", {
+          partyADeposited: flagsArr[0],
+          partyBDeposited: flagsArr[1],
+          completed: flagsArr[2],
+          cancelled: flagsArr[3]
+        });
+      } catch (error) {
+        console.error("✗ Failed to get escrow flags:", error);
+        throw new Error("Failed to retrieve escrow status flags");
+      }
+      
+      try {
+        timesArr = await contract.getEscrowTimes(escrowId);
+        console.log("✓ Successfully got times:", {
+          creationTime: new Date(Number(timesArr[0]) * 1000),
+          depositDeadline: new Date(Number(timesArr[1]) * 1000)
+        });
+      } catch (error) {
+        console.error("✗ Failed to get escrow times:", error);
+        console.error("This might be due to the contract storing creation time incorrectly");
+        
+        // If getting times fails, try to continue without them
+        timesArr = [0, 0]; // Default values
+        console.log("⚠ Using default time values due to contract error");
+      }
+      
+      // Check additional contract state
+      let isPaused = false;
+      let owner = "0x0000000000000000000000000000000000000000";
+      
+      try {
+        isPaused = await contract.paused();
+        console.log("✓ Contract paused status:", isPaused);
+      } catch (error) {
+        console.warn("⚠ Could not check pause status:", error);
+      }
+      
+      try {
+        owner = await contract.owner();
+        console.log("✓ Contract owner:", owner);
+      } catch (error) {
+        console.warn("⚠ Could not get contract owner:", error);
+      }
+      
+      const result = {
+        escrowId,
         partyA,
         partyB,
+        currentWallet: walletAddress,
         amountA: ethers.formatEther(amountAWei),
         amountB: ethers.formatEther(amountBWei),
-        flags: flagsArr,
-        times: timesArr,
+        partyADeposited: Boolean(flagsArr[0]),
+        partyBDeposited: Boolean(flagsArr[1]),
+        completed: Boolean(flagsArr[2]),
+        cancelled: Boolean(flagsArr[3]),
+        creationTime: timesArr[0] > 0 ? new Date(Number(timesArr[0]) * 1000) : new Date(),
+        depositDeadline: timesArr[1] > 0 ? new Date(Number(timesArr[1]) * 1000) : new Date(),
+        currentTime: new Date(),
+        timeUntilDeadline: timesArr[1] > 0 ? Math.floor((Number(timesArr[1]) * 1000 - Date.now()) / 1000) : 0,
         isPaused,
-        owner
-      }
+        owner,
+        isPartyA: walletAddress.toLowerCase() === partyA.toLowerCase(),
+        isPartyB: walletAddress.toLowerCase() === partyB.toLowerCase()
+      };
+      
+      console.log("=== FINAL ESCROW STATUS ===");
+      console.table(result);
+      console.log("============================");
+      
+      return result;
+      
     } catch (error) {
-      console.error("Error checking escrow status:", error)
-      return null
+      console.error("❌ Error in checkEscrowStatus:", error);
+      return null;
     }
-  }
+  };
 
   const getStatusBadge = (status: number, escrow: Escrow) => {
     switch (status) {

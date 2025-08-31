@@ -1,92 +1,66 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.0;
 
-/**
- * @title DecentralizedEscrow
- * @dev Ultra-optimized escrow contract for Remix deployment
- * Stack depth optimized with minimal local variables
- */
-contract DecentralizedEscrow {
-    
-    address public owner;
-    bool public paused;
-    uint256 private _status = 1;
-    
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
-        _;
-    }
-    
-    modifier whenNotPaused() {
-        require(!paused, "Paused");
-        _;
-    }
-    
-    modifier nonReentrant() {
-        require(_status == 1, "Reentrant");
-        _status = 2;
-        _;
-        _status = 1;
-    }
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract SecureSwap is ReentrancyGuard, Pausable, Ownable {
+    uint256 private constant PARTY_A_DEPOSITED = 1;
+    uint256 private constant PARTY_B_DEPOSITED = 2;
+    uint256 private constant COMPLETED = 4;
+    uint256 private constant CANCELLED = 8;
     
     struct Escrow {
         address partyA;
         address partyB;
         uint256 amountA;
         uint256 amountB;
-        uint256 status; // Packed: bit 0-7 flags, bit 8-63 timestamps
-        uint256 depositDeadline; // Deposit deadline timestamp
+        uint256 status;
+        uint256 depositDeadline;
+        uint256 creationTime;  // FIXED: Separate field for creation time
         string description;
     }
     
     mapping(uint256 => Escrow) public escrows;
     mapping(address => uint256[]) public userEscrows;
-    
     uint256 public nextEscrowId = 1;
-    uint256 public serviceFeePercent = 25; // 0.25%
+    uint256 public serviceFeePercent = 100; // 1%
     
-    // Status bit positions
-    uint256 constant PARTY_A_DEPOSITED = 1;
-    uint256 constant PARTY_B_DEPOSITED = 2;
-    uint256 constant COMPLETED = 4;
-    uint256 constant CANCELLED = 8;
+    event EscrowCreated(uint256 indexed escrowId, address indexed partyA, address indexed partyB);
+    event FundsDeposited(uint256 indexed escrowId, address indexed depositor);
+    event EscrowCompleted(uint256 indexed escrowId);
+    event EscrowCancelled(uint256 indexed escrowId);
     
-    event EscrowCreated(uint256 indexed id, address indexed partyA, address indexed partyB);
-    event FundsDeposited(uint256 indexed id, address indexed depositor);
-    event EscrowCompleted(uint256 indexed id);
-    event EscrowCancelled(uint256 indexed id);
-    
-    constructor() {
-        owner = msg.sender;
-    }
+    constructor() Ownable(msg.sender) {}
     
     function createEscrow(
         address _partyB,
         uint256 _amountB,
-        string calldata _description
-    ) external payable whenNotPaused nonReentrant returns (uint256) {
-        require(_partyB != address(0) && _partyB != msg.sender, "Invalid party B");
-        require(msg.value > 0 && _amountB > 0, "Invalid amounts");
+        string memory _description
+    ) external payable whenNotPaused nonReentrant {
+        require(_partyB != address(0), "Invalid party B");
+        require(_partyB != msg.sender, "Cannot escrow with yourself");
+        require(msg.value > 0, "Must send funds");
+        require(_amountB > 0, "Amount B must be positive");
         
-        uint256 id = nextEscrowId++;
+        uint256 escrowId = nextEscrowId++;
         
-        escrows[id] = Escrow({
+        escrows[escrowId] = Escrow({
             partyA: msg.sender,
             partyB: _partyB,
             amountA: msg.value,
             amountB: _amountB,
-            status: PARTY_A_DEPOSITED | (block.timestamp << 8),
-            depositDeadline: block.timestamp + 300, // 5 minutes deadline
+            status: PARTY_A_DEPOSITED,
+            depositDeadline: block.timestamp + 1 hours,
+            creationTime: block.timestamp,  // FIXED: Store creation time separately
             description: _description
         });
         
-        userEscrows[msg.sender].push(id);
-        userEscrows[_partyB].push(id);
+        userEscrows[msg.sender].push(escrowId);
+        userEscrows[_partyB].push(escrowId);
         
-        emit EscrowCreated(id, msg.sender, _partyB);
-        emit FundsDeposited(id, msg.sender);
-        
-        return id;
+        emit EscrowCreated(escrowId, msg.sender, _partyB);
     }
     
     function depositFunds(uint256 _id) external payable whenNotPaused nonReentrant {
@@ -172,7 +146,7 @@ contract DecentralizedEscrow {
         emit EscrowCompleted(_id);
     }
     
-    // View functions with minimal stack usage
+    // FIXED: Updated view functions to use separate creationTime field
     function getEscrowParties(uint256 _id) external view returns (address, address) {
         return (escrows[_id].partyA, escrows[_id].partyB);
     }
@@ -190,8 +164,8 @@ contract DecentralizedEscrow {
     }
     
     function getEscrowTimes(uint256 _id) external view returns (uint256[2] memory times) {
-        times[0] = escrows[_id].status >> 8; // creation time
-        times[1] = escrows[_id].depositDeadline; // deposit deadline
+        times[0] = escrows[_id].creationTime;     // FIXED: Use separate field
+        times[1] = escrows[_id].depositDeadline;  // deposit deadline
     }
     
     function getEscrowDescription(uint256 _id) external view returns (string memory) {
@@ -202,43 +176,20 @@ contract DecentralizedEscrow {
         return userEscrows[_user];
     }
     
-    function getContractStats() external view returns (uint256[4] memory stats) {
-        stats[0] = nextEscrowId - 1; // total
-        
-        for (uint256 i = 1; i < nextEscrowId; i++) {
-            uint256 status = escrows[i].status;
-            if (status & COMPLETED != 0) {
-                stats[2]++; // completed
-            } else if (status & CANCELLED != 0) {
-                stats[3]++; // cancelled
-            } else {
-                stats[1]++; // active
-            }
-        }
-    }
-    
-    // Owner functions
-    function setServiceFee(uint256 _fee) external onlyOwner {
-        require(_fee <= 500, "Fee too high");
-        serviceFeePercent = _fee;
-    }
-    
     function pause() external onlyOwner {
-        paused = true;
+        _pause();
     }
     
     function unpause() external onlyOwner {
-        paused = false;
+        _unpause();
     }
     
-    function withdrawFees() external onlyOwner nonReentrant {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "No fees");
-        payable(owner).transfer(balance);
+    function setServiceFee(uint256 _feePercent) external onlyOwner {
+        require(_feePercent <= 1000, "Fee too high"); // Max 10%
+        serviceFeePercent = _feePercent;
     }
     
-    function transferOwnership(address _newOwner) external onlyOwner {
-        require(_newOwner != address(0), "Invalid owner");
-        owner = _newOwner;
+    function withdrawFees() external onlyOwner {
+        payable(owner()).transfer(address(this).balance);
     }
 }
